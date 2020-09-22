@@ -1,10 +1,6 @@
 <div class="containar">
 	<div class="row">
-		<% if flash[:notice] %>
-	<div class="flash">
-		<%= flash[:notice] %>
-	</div>
-		<% end %>
+
 		<div class="col-xs-3">
 <%= render 'users/list', user: @user, book: @book %>
 		</div>
@@ -24,6 +20,22 @@
 		</td>
 		<td><%= @book2.title %></td>
 		<td><%= @book2.body %></td>
+		<td><% if @book2.favorited_by?(current_user) %>
+					<td class="heart">
+						<%= link_to book_favorites_path(@book2.id), method: :delete do %>
+						<i class="fas fa-heart" style="color: red;"></i>
+						<%= @book2.favorites.count %>
+						<% end %>
+					</td>
+				<% else %>
+					<td class="heart">
+						<%= link_to book_favorites_path(@book2.id), method: :post do %>
+						<i class="far fa-heart"></i>
+						<%= @book2.favorites.count %>
+						<% end %>
+		</td>
+			<% end %>
+			<td>コメント: <%= @book2.book_comments.count %></td>
 
 		<% if @book2.user == current_user %>
 		<td>
@@ -35,6 +47,20 @@
 		<% end %>
 	</tr>
 </table>
+
+			<% @book2.book_comments.each do |book_comment| %>
+				<div>
+					<%= book_comment.comment %>
+				<% if book_comment.user == current_user %>
+					<%= link_to"Destroy",book_book_comments_path(book_comment), method: :delete,class: "btn btn-danger" %>
+				<% end %>
+			</div>
+			<% end %>
+
+		<%= form_for [@book2, @book_comment] do |f| %>
+			<%= f.text_area :comment, class: "col-xs-12" %>
+		<%= f.submit "送信" %>
+		<% end %>
 
 		</div>
 	</div>
