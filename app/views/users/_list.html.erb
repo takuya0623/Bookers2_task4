@@ -13,10 +13,37 @@
 		<th>introduction</th>
 		<th><div class="profile-introduction"><%= user.introduction %></div></th>
 	</tr>
-</table>
+	<tr>
+		<th>follows</th>
+		<th><div class="follower">
+			<%= link_to follows_path(user.id) do%>
+			<%= user.follower.count %>
+			<% end %>
+			</div>
+		</th>
+	</tr>
+	<tr>
+		<th>followers</th>
+		<th><div class="followed">
+			<%= link_to followed_path(user.id) do%>
+			<%= user.followed.count %>
+			<% end %>
+			</div>
+		</th>
+	</tr>
 
+</table>
+<% if user == current_user %>
 <%= link_to "",edit_user_path(user),class: "glyphicon glyphicon-wrench
   btn btn-default btn-block" %>
+<% end %>
+
+  <% unless user == current_user %>
+		<% if current_user.following?(user) %>
+			<%= link_to 'フォロー外す', unfollow_path(user.id),class: "btn btn-primary", method: :POST %>
+		<% else %>
+		<%= link_to 'フォローする', follow_path(user.id), class: "btn btn-success", method: :POST %>
+	<% end %>
 
 
 <h1>New book</h1>
@@ -31,4 +58,5 @@
 <div class="text-left">
 <%= f.submit 'Create Book',class: "btn-primary" %>
 </div>
+<% end %>
 <% end %>

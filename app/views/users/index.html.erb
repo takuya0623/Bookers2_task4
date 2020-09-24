@@ -14,6 +14,13 @@
 	<tr>
 		<td class="image"><%= attachment_image_tag user, :profile_image, :fill, 60, 60, format: 'jpeg', class: "img-circle pull-left profile-img", fallback: "no_image.jpg",size: "60x60"  %></td>
 		<td class="name"><%= user.name %></td>
+		<td>フォロー数:<%= user.follower.count %></td>
+		<td>フォロワー数:<%= user.followed.count %></td>
+		<%if current_user.following?(user) %>
+		<td><%= link_to 'フォロー外す', unfollow_path(user.id), method: :POST %></td>
+				<% else %>
+		<td><%= link_to 'フォローする', follow_path(user.id), method: :POST %></td>
+		<% end %>
 		<td class="show"><%=link_to"Show",user_path(user.id) %></td>
 	</tr>
 <% end %>
